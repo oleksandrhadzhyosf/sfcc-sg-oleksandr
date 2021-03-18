@@ -40,12 +40,18 @@ function continueShopping() {
 function show() {
     var cartForm = app.getForm('cart');
     app.getForm('login').invalidate();
+    var numberOfOrdersFromCustomer = 0;
+
+    if (customer.isAuthenticated()) {
+        numberOfOrdersFromCustomer = customer.getOrderHistory().getOrderCount();
+    }
 
     cartForm.get('shipments').invalidate();
 
     app.getView('Cart', {
         cart: app.getModel('Cart').get(),
-        RegistrationStatus: false
+        RegistrationStatus: false,
+        numberOfOrdersFromCustomer: numberOfOrdersFromCustomer
     }).render('checkout/cart/cart');
 
 }
