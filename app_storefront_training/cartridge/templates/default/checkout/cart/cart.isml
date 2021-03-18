@@ -10,7 +10,6 @@
     <isslot id="cart-banner" description="Banner for Cart page" context="global" />
 
     <isif condition="${pdict.Basket == null || (empty(pdict.Basket.productLineItems) && empty(pdict.Basket.giftCertificateLineItems))}">
-        <h1>EMPTY CART</h1>
         <div class="cart-empty">
             <h1>${Resource.msg('cart.cartempty','checkout',null)}</h1>
             <form class="cart-action-continue-shopping" action="${URLUtils.httpContinue()}" method="post" name="${pdict.CurrentForms.cart.dynamicHtmlName}" id="continue-shopping">

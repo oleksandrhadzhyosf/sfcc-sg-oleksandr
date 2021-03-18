@@ -15,8 +15,8 @@ var Transaction = require('dw/system/Transaction');
 var URLUtils = require('dw/web/URLUtils');
 
 /* Script Modules */
-var app = require('~/cartridge/scripts/app');
-var guard = require('~/cartridge/scripts/guard');
+var app = require('app_storefront_controllers/cartridge/scripts/app');
+var guard = require('app_storefront_controllers/cartridge/scripts/guard');
 
 /**
  * Redirects the user to the last visited catalog URL if known, otherwise redirects to
