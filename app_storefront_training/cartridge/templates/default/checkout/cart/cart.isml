@@ -11,6 +11,9 @@
 
     <isif condition="${pdict.Basket == null || (empty(pdict.Basket.productLineItems) && empty(pdict.Basket.giftCertificateLineItems))}">
         <div class="cart-empty">
+            <isif condition="${customer.isAuthenticated()}">
+                <h1>${pdict.numberOfOrdersFromCustomer}</h1>
+            </isif>
             <h1>${Resource.msg('cart.cartempty','checkout',null)}</h1>
             <form class="cart-action-continue-shopping" action="${URLUtils.httpContinue()}" method="post" name="${pdict.CurrentForms.cart.dynamicHtmlName}" id="continue-shopping">
                 <fieldset>
