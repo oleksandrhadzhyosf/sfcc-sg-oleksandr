@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata xmlns="http://www.demandware.com/xml/impex/metadata/2006-10-31">
+    
+    <type-extension type-id="SitePreferences">
+        <custom-attribute-definitions>  
+            <attribute-definition attribute-id="productAvailability">
+                <display-name xml:lang="x-default">productAvailability</display-name>
+                <type>double</type>
+                <mandatory-flag>false</mandatory-flag>
+                <externally-managed-flag>false</externally-managed-flag>
+                <default-value>5.0</default-value>
+            </attribute-definition>
+        </custom-attribute-definitions>
+        <group-definitions>
+            <attribute-group group-id="productAvailability">
+                <display-name xml:lang="x-default">productAvailability</display-name>
+                <attribute attribute-id="productAvailability"/>
+            </attribute-group>
+        </group-definitions>
+    </type-extension>
+
+</metadata>
+
