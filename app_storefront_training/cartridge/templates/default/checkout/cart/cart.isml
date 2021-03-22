@@ -8,7 +8,7 @@
     <isset name="store" value="${dw.catalog.StoreMgr.getStore(pdict.CurrentSession.custom.storeId)}" scope="page" />
     </isif>
     <isslot id="cart-banner" description="Banner for Cart page" context="global" />
-    
+
     <isif condition="${pdict.Basket == null || (empty(pdict.Basket.productLineItems) && empty(pdict.Basket.giftCertificateLineItems))}">
         <div class="cart-empty">
             <h1>${Resource.msg('cart.cartempty','checkout',null)}</h1>
