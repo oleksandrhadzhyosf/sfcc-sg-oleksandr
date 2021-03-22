@@ -12,8 +12,16 @@ Prints a message about the product's availability. The messages to be displayed 
         var availabilityMsg;
         var inStockDateMsg;
         if (availabilityStatus == dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_IN_STOCK && inventoryRecord != null && (inventoryRecord.stockLevel.available || inventoryRecord.perpetual)) {
-            availabilityClass = 'in-stock-msg';
-            availabilityMsg = StringUtils.format(Resource.msg('global.instock', 'locale', null));
+            const Site = require('dw/system/Site');
+            let productAvailablePreference = Site.getCurrent().getPreferences().custom.productAvailability;
+            let productAvaible = inventoryRecord.getATS().getValue();
+            if (productAvaible <= productAvailablePreference) {
+                availabilityClass = 'in-stock-msg';
+                availabilityMsg = StringUtils.format(Resource.msgf('global.products.available', 'locale', null, productAvaible));
+            } else {
+                availabilityClass = 'in-stock-msg';
+                availabilityMsg = StringUtils.format(Resource.msg('global.instock', 'locale', null));
+            }
         } else if (availabilityStatus == dw.catalog.ProductAvailabilityModel.AVAILABILITY_STATUS_PREORDER) {
             availabilityClass = 'preorder-msg';
             availabilityMsg = StringUtils.format(Resource.msg('global.allpreorder', 'locale', null));
