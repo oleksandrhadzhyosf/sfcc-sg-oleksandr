@@ -62,9 +62,18 @@ function consentTracking() {
  * meta data. Renders the account/user/registration template using an anonymous view.
  */
 function editProfile() {
+    const File = require('dw/io/File');
+    var customerID = customer.getID();
     var pageMeta;
     var accountPersonalDataAsset;
     var Content = app.getModel('Content');
+    var avatarPath = null;
+
+    var customerAvatar = new File(File.IMPEX +  File.SEPARATOR + 'upload' + File.SEPARATOR + 'avatars' + File.SEPARATOR + customerID + '.jpg');
+       
+    if (customerAvatar.exists() && customerAvatar.isFile()) {
+        avatarPath = '/on/demandware.servlet/webdav/Sites' + customerAvatar.getFullPath();
+    }
 
     if (!request.httpParameterMap.invalid.submitted) {
         app.getForm('profile').clear();
@@ -73,6 +82,7 @@ function editProfile() {
         app.getForm('profile.login').copyFrom(customer.profile.credentials);
         app.getForm('profile.addressbook.addresses').copyFrom(customer.profile.addressBook.addresses);
     }
+
     accountPersonalDataAsset = Content.get('myaccount-personaldata');
 
     pageMeta = require('app_storefront_controllers/cartridge/scripts/meta');
@@ -81,6 +91,7 @@ function editProfile() {
     app.getView({
         bctext2: Resource.msg('account.user.registration.editaccount', 'account', null),
         Action: 'edit',
+        avatarPath: avatarPath,
         ContinueURL: URLUtils.https('Account-EditForm')
     }).render('account/user/registration');
 }
@@ -448,19 +459,25 @@ function includeNavigation() {
     app.getView().render('account/accountnavigation');
 }
 
+/**
+ * Procced customer's avatar form
+ * Save image to impex/upload/avatars folder
+ */
 function avatarUpload() {
-    const Logger = require('dw/system/Logger');
-    const File = require('dw/io/File');
-
     if (customer.isAuthenticated()) {
-        var customerID = customer.getID();
-        var params = request.httpParameterMap;
-        var files = params.processMultipart(function(){
-            return new File(File.IMPEX +  File.SEPARATOR + 'upload' + File.SEPARATOR + customerID);
-        });
+        const Logger = require('dw/system/Logger');
+        const File = require('dw/io/File');
+        try {
+            var customerID = customer.getID();
+            var params = request.httpParameterMap;
+            var files = params.processMultipart(function(){
+                return new File(File.IMPEX +  File.SEPARATOR + 'upload' + File.SEPARATOR + 'avatars' + File.SEPARATOR + customerID + '.jpg');
+            });
+        } catch (error) {
+            Logger.error('Account.js > execute crashed on l.{0}. ERROR: {1}', error.lineNumber, error.message);
+        }
     }
 
-    var test = 'string';
     response.redirect(URLUtils.https('Account-EditProfile'));
 }
 
@@ -511,6 +528,6 @@ exports.RegistrationForm = guard.ensure(['post', 'https', 'csrf'], registrationF
 /** Renders the account navigation.
  * @see {@link module:controllers/Account~includeNavigation} */
 exports.IncludeNavigation = guard.ensure(['get'], includeNavigation);
-/** Handles the customer's avatar from.
+/** Handles the customer's avatar form.
  * @see {@link module:controllers/Account~avatarUpload} */
  exports.AvatarUpload = guard.ensure(['post'], avatarUpload);
