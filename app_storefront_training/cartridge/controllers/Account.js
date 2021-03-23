@@ -448,6 +448,22 @@ function includeNavigation() {
     app.getView().render('account/accountnavigation');
 }
 
+function avatarUpload() {
+    const Logger = require('dw/system/Logger');
+    const File = require('dw/io/File');
+
+    if (customer.isAuthenticated()) {
+        var customerID = customer.getID();
+        var params = request.httpParameterMap;
+        var files = params.processMultipart(function(){
+            return new File(File.IMPEX +  File.SEPARATOR + 'upload' + File.SEPARATOR + customerID);
+        });
+    }
+
+    var test = 'string';
+    response.redirect(URLUtils.https('Account-EditProfile'));
+}
+
 /* Web exposed methods */
 
 /** Renders the account overview.
@@ -495,3 +511,6 @@ exports.RegistrationForm = guard.ensure(['post', 'https', 'csrf'], registrationF
 /** Renders the account navigation.
  * @see {@link module:controllers/Account~includeNavigation} */
 exports.IncludeNavigation = guard.ensure(['get'], includeNavigation);
+/** Handles the customer's avatar from.
+ * @see {@link module:controllers/Account~avatarUpload} */
+ exports.AvatarUpload = guard.ensure(['post'], avatarUpload);
