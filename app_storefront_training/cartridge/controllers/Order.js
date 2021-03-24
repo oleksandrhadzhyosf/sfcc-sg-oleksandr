@@ -12,8 +12,8 @@ var OrderMgr = require('dw/order/OrderMgr');
 var PagingModel = require('dw/web/PagingModel');
 
 /* Script Modules */
-var app = require('~/cartridge/scripts/app');
-var guard = require('~/cartridge/scripts/guard');
+var app = require('app_storefront_controllers/cartridge/scripts/app');
+var guard = require('app_storefront_controllers/cartridge/scripts/guard');
 
 
 /**
@@ -39,7 +39,7 @@ function history() {
     orderListForm.clear();
     orderListForm.copyFrom(orderPagingModel.pageElements);
 
-    var pageMeta = require('~/cartridge/scripts/meta');
+    var pageMeta = require('app_storefront_controllers/cartridge/scripts/meta');
     pageMeta.update(ContentMgr.getContent('myaccount-orderhistory'));
 
     app.getView({
@@ -95,6 +95,29 @@ function track () {
     app.getView({Order: Order}).render('account/orderhistory/orderdetails');
 }
 
+function reorderProducts() {
+    var params = request.getHttpParameters();
+    const OrderMgr = require('dw/order/OrderMgr');
+    const Transaction = require('dw/system/Transaction');
+    // const BasketMgr = require('dw/order/BasketMgr');
+    var cart = app.getModel('Cart').goc();
+    var orderNo = params.entrySet()[0].value[0];
+    var order = OrderMgr.getOrder(orderNo);
+    var newLineItem;
+   // var basket = vart.getCurrentOrNewBasket();
+
+    if (!empty(order)) {
+        var allProductLineItems = order.getAllProductLineItems();
+        for (var i = 0; i < allProductLineItems.size(); i++) {
+            var productID = allProductLineItems[i].productID;
+            var shipment = allProductLineItems[i].shipment;
+            newLineItem = cart.createProductLineItem(productID, shipment);
+        }
+    }
+    
+    var test = 'String';
+    response.redirect(dw.web.URLUtils.https('Order-History'));
+}
 
 /*
  * Module exports
@@ -112,3 +135,6 @@ exports.Orders = guard.ensure(['post', 'https', 'loggedIn'], orders);
 /** Renders a page with details of a single order.
  * @see module:controllers/Order~track */
 exports.Track = guard.ensure(['get', 'https'], track);
+/** Reorder all products.
+ * @see module:controllers/Order~reorderProducts */
+ exports.ReorderProducts = guard.ensure(['post'], reorderProducts);

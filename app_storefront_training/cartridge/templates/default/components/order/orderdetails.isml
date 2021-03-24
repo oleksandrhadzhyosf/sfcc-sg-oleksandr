@@ -31,6 +31,10 @@
             <span class="value"><isprint value="${Order.creationDate}" style="DATE_LONG"/></span>
         </div>
     </div>
+    <form action="${URLUtils.https('Order-ReorderProducts')}" method="post">
+        <input type="hidden" id="reorderProducts" name="reorderProducts" value="${Order.orderNo}">
+        <input type="submit" value="Reorder">
+    </form>
     <div class="order-payment-summary">
         <div class="label">${Resource.msg('order.orderdetails.paymenttotal','order',null)}</div>
         <div class="order-detail-summary">
