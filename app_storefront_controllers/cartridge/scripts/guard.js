@@ -33,7 +33,7 @@ function requireLogin(params) {
     var redirectUrl = dw.web.URLUtils.https('Login-Show');
 
     // Save return URL in session.
-    session.custom.TargetLocation = browsing.lastUrl();
+    session.custom.TargetLocation = browsing.lastUrl().toString();
 
     if (params && params.scope) {
         redirectUrl.append('scope', params.scope);
