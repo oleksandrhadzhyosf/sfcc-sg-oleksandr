@@ -102,7 +102,6 @@ function reorderProducts() {
     const params = request.getHttpParameters();
     if (!empty(params)) {
         const OrderMgr = require('dw/order/OrderMgr');
-        const ProductOptionModel = require('dw/catalog/ProductOptionModel');
         const Logger = require('dw/system/Logger');
         try {
             let orderNo = params.entrySet()[0].value[0];
