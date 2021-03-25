@@ -95,27 +95,42 @@ function track () {
     app.getView({Order: Order}).render('account/orderhistory/orderdetails');
 }
 
+/**
+ * Add products from a specific order to a cart.
+ */
 function reorderProducts() {
-    var params = request.getHttpParameters();
-    const OrderMgr = require('dw/order/OrderMgr');
-    const Transaction = require('dw/system/Transaction');
-    // const BasketMgr = require('dw/order/BasketMgr');
-    var cart = app.getModel('Cart').goc();
-    var orderNo = params.entrySet()[0].value[0];
-    var order = OrderMgr.getOrder(orderNo);
-    var newLineItem;
-   // var basket = vart.getCurrentOrNewBasket();
+    const params = request.getHttpParameters();
+    if (!empty(params)) {
+        const OrderMgr = require('dw/order/OrderMgr');
+        const ProductOptionModel = require('dw/catalog/ProductOptionModel');
+        const Logger = require('dw/system/Logger');
+        try {
+            let orderNo = params.entrySet()[0].value[0];
+            let order = OrderMgr.getOrder(orderNo);
 
-    if (!empty(order)) {
-        var allProductLineItems = order.getAllProductLineItems();
-        for (var i = 0; i < allProductLineItems.size(); i++) {
-            var productID = allProductLineItems[i].productID;
-            var shipment = allProductLineItems[i].shipment;
-            newLineItem = cart.createProductLineItem(productID, shipment);
+            if (empty(order)) {
+                response.redirect(dw.web.URLUtils.https('Order-History'));
+            }
+
+            let allProductLineItems = order.getAllProductLineItems();
+
+            if (empty(allProductLineItems)) {
+                response.redirect(dw.web.URLUtils.https('Order-History'));
+            }
+
+            let cart = app.getModel('Cart').goc();
+
+            for (let i = 0; i < allProductLineItems.size(); i++) {
+                if (allProductLineItems[i].bonusProductLineItem == false && allProductLineItems[i].bundledProductLineItem == false && empty(allProductLineItems[i].bonusDiscountLineItem)) {
+                    let product = allProductLineItems[i].product;
+                    let quantity = allProductLineItems[i].quantity.getValue();
+                    cart.addProductItem(product, quantity, null);
+                }
+            }
+        } catch (error) {
+            Logger.error('Order.js > execute crashed on l.{0}. ERROR: {1}', error.lineNumber, error.message);
         }
     }
-    
-    var test = 'String';
     response.redirect(dw.web.URLUtils.https('Order-History'));
 }
 
