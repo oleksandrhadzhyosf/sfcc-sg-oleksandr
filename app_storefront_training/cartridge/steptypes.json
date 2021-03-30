@@ -1,0 +1,29 @@
+{
+    "@type-id": "custom.CSVCategoryExportXML",
+    "@supports-parallel-execution": "false",
+    "@supports-site-context": "true",
+    "@supports-organization-context": "false",
+    "module": "cartridges/sfra_training_oleksandr/cartridge/scripts/job/CSVCategoryExportXML.js",
+    "function": "execute",
+    "transactional": "true",
+    "parameters": {
+        "parameter": [
+            {
+                "@name": "productCategory",
+                "@type": "string",
+                "@required": "true"
+            }
+        ]
+    },
+    "status-code": {
+        "status": [
+            {
+                "@code": "ERROR"
+            },
+            {
+                "@code": "OK"
+            }
+        ]
+    }
+}
+}
